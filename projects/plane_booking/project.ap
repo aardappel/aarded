@@ -1,0 +1,5 @@
+/* Aardappel project file */
+file "simple.bag";
+file "full.m";
+file "book.m";
+file "agency.m";

@@ -1,0 +1,4 @@
+/* Aardappel project file */
+file "append.m";
+file "flatten.m";
+file "flattentest.bag";

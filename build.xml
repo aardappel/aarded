@@ -1,0 +1,25 @@
+<project name="AardEd" default="run" basedir=".">
+  <description>
+    The Aardappel Programming Language Editor.
+  </description>
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+
+  <target name="init">
+    <tstamp/>
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init">
+    <javac srcdir="${src}" destdir="${build}"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${build}"/>
+  </target>
+
+  <target name="run" depends="compile">
+    <java classname="AardEd" classpath="${build}" dir="${src}" fork="true">
+    </java>
+  </target>
+</project>

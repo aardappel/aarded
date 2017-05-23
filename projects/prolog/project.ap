@@ -1,0 +1,6 @@
+/* Aardappel project file */
+file "samplegoals.bag";
+file "support.m";
+file "seek.m";
+file "unify.m";
+file "lists.m";

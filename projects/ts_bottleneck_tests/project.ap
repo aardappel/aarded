@@ -1,0 +1,5 @@
+/* Aardappel project file */
+file "test_seq.bag";
+file "lengths.m";
+file "test_tspat.bag";
+file "test_ts.bag";

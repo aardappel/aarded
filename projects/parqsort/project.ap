@@ -1,0 +1,6 @@
+/* Aardappel project file */
+file "qsort.m";
+file "succtest.bag";
+file "qsorttest.bag";
+file "lists.m";
+file "succ.m";

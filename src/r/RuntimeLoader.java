@@ -7,7 +7,9 @@ public class RuntimeLoader extends ClassLoader {
   private byte[] classdata;
   private Class loadedClass;
 
-  public RuntimeLoader(byte[] data) { this.classdata = data; }
+  public RuntimeLoader(byte[] data) {
+    this.classdata = data;
+  }
 
   public Class loadClass() {
     Class cl = defineClass(null, classdata, 0, classdata.length);
@@ -18,7 +20,7 @@ public class RuntimeLoader extends ClassLoader {
   }
 
   public synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
-    Class cl = (Class)cache.get(name);
+    Class cl = (Class) cache.get(name);
     if (cl == null) {
       try {
         cl = findSystemClass(name);
@@ -34,6 +36,4 @@ public class RuntimeLoader extends ClassLoader {
     if (resolve) resolveClass(cl);
     return cl;
   }
-
 }
-

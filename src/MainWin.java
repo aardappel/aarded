@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class MainWin extends Frame {
   Code buffer = null;
@@ -32,21 +32,24 @@ public class MainWin extends Frame {
   String lastproject = null;
   Hashtable seenatoms = new Hashtable();
 
-  void quit() { saveprefs(); System.exit(1); }
+  void quit() {
+    saveprefs();
+    System.exit(1);
+  }
 
   public MainWin() {
     try {
       jbInit();
     } catch (Exception e) {
-      System.out.println("AardEd internal exception: "+e);
+      System.out.println("AardEd internal exception: " + e);
       e.printStackTrace();
     } catch (Error f) {
-      System.out.println("AardEd internal error: "+f);
+      System.out.println("AardEd internal error: " + f);
       f.printStackTrace();
     }
   }
 
-  public void jbInit() throws Exception{
+  public void jbInit() throws Exception {
     setLayout(borderLayout1);
     setBackground(SystemColor.window);
     //this.setSize(new Dimension(300, 200));
@@ -103,14 +106,14 @@ public class MainWin extends Frame {
     menu1.add(menuItem5);
     menu2.add(addfile);
     menu2.add(addmodule);
-    menu2.add(addbag);                              
+    menu2.add(addbag);
     menu3.add(menuItem9);
     menu3.add(menuItem10);
     pack();
-    setLocation(100,100);
-    setSize(300,250);
+    setLocation(100, 100);
+    setSize(300, 250);
     show();
-    //for(int i = 0;i<1000000000;i++) { String s = "jgjgj" + i; };
+    //for(int i = 0;i<1000000000;i++) { String s = "jgjgj" + i; }
     loadatomimages();
     loadprefs();
     loadlastproject();
@@ -120,122 +123,165 @@ public class MainWin extends Frame {
     File f = new File("atomimages");
     String names[] = f.list();
     MediaTracker mt = new MediaTracker(this);
-    for(int a = 0;a<names.length;a++) {
+    for (int a = 0; a < names.length; a++) {
       String atom = names[a];
-      String name = (new File(f.getAbsolutePath(),atom)).toString();
-      msg("loading atom: "+name);
+      String name = (new File(f.getAbsolutePath(), atom)).toString();
+      msg("loading atom: " + name);
       Image i = Toolkit.getDefaultToolkit().getImage(name);
       int cut = atom.lastIndexOf('.');
-      if(cut>0) atom = atom.substring(0,cut);
+      if (cut > 0) atom = atom.substring(0, cut);
       try {
-        atom = ""+(char)Integer.parseInt(atom);
-      } catch(Exception e) {};
-      checkatom(atom,i);
-      mt.addImage(i,a);
-    };
+        atom = "" + (char) Integer.parseInt(atom);
+      } catch (Exception e) {
+      }
+      checkatom(atom, i);
+      mt.addImage(i, a);
+    }
     try {
       mt.waitForAll();
     } catch (Exception e) {
-    };
+    }
   }
 
-  class AtomInfo { Image i; }
+  class AtomInfo {
+    Image i;
+  }
 
   Image checkatom(String name, Image i) {
-    AtomInfo a = (AtomInfo)seenatoms.get(name);
-    if(a==null) seenatoms.put(name,a = new AtomInfo());
-    if(i!=null) a.i = i;
+    AtomInfo a = (AtomInfo) seenatoms.get(name);
+    if (a == null) seenatoms.put(name, a = new AtomInfo());
+    if (i != null) a.i = i;
     return a.i;
-  };
+  }
 
   void loadprefs() {
     try {
       BufferedReader in = new BufferedReader(new FileReader(prefsfile));
-      //DataInputStream in = new DataInputStream(new FileInputStream(prefsfile));
+      //DataInputStream in = newï¿½DataInputStream(newï¿½FileInputStream(prefsfile));
       String s;
-      while((s = in.readLine())!=null) {
+      while ((s = in.readLine()) != null) {
         int t = s.charAt(0);
-        if(s.charAt(1)!=':') { msg("prefs file format error (missing ':')"); break; };
+        if (s.charAt(1) != ':') {
+          msg("prefs file format error (missing ':')");
+          break;
+        }
         s = s.substring(2);
-        if(t=='L') {
+        if (t == 'L') {
           lastproject = s;
         } else {
-          msg("prefs file format error (unknown code)"); break;
-        };
-      };
+          msg("prefs file format error (unknown code)");
+          break;
+        }
+      }
       in.close();
-    } catch(IOException i) {
-      msg("couldn't load prefs file "+prefsfile);
-    };
+    } catch (IOException i) {
+      msg("couldn't load prefs file " + prefsfile);
+    }
   }
 
   void saveprefs() {
     try {
       DataOutputStream dos = new DataOutputStream(new FileOutputStream(prefsfile));
-      if(lastproject!=null) dos.writeBytes("L:"+lastproject+"\n");
+      if (lastproject != null) dos.writeBytes("L:" + lastproject + "\n");
       dos.close();
-    } catch(IOException i) {
-      msg("problem while saving "+prefsfile);
-    };
+    } catch (IOException i) {
+      msg("problem while saving " + prefsfile);
+    }
   }
 
   void loadlastproject() {
-    if(lastproject!=null) proj.loadproject(new File(lastproject),plist);
+    if (lastproject != null) proj.loadproject(new File(lastproject), plist);
   }
 
-  void msg(String s) { textArea1.append(s+"\n"); }
+  void msg(String s) {
+    textArea1.append(s + "\n");
+  }
 
   void haschanged(Code c, Treeview orig) {
-    for(int a=0;a<allviews.size();a++) {
-      Treeview tv = (Treeview)allviews.elementAt(a);
+    for (int a = 0; a < allviews.size(); a++) {
+      Treeview tv = (Treeview) allviews.elementAt(a);
       // todo: check wether tv displays c
       // needs lock because of paint()
-      if(tv!=orig) tv.refreshtree(false);
-    };
-  };
+      if (tv != orig) tv.refreshtree(false);
+    }
+  }
 
-  void viewclosing(Treeview tv) { allviews.removeElement(tv); };
+  void viewclosing(Treeview tv) {
+    allviews.removeElement(tv);
+  }
 
   void plist_actionPerformed(ActionEvent e) {
     String s = e.getActionCommand();
-    allviews.addElement(new Treeview(this,s,proj.get(s).code()));
+    allviews.addElement(new Treeview(this, s, proj.get(s).code()));
   }
 
   void delete_actionPerformed(ActionEvent e) {
     String s = plist.getSelectedItem();
-    if(s!=null) {
-      if((new StringRequest(this,"Are you sure?",null,true)).result!=null) {
+    if (s != null) {
+      if ((new StringRequest(this, "Are you sure?", null, true)).result != null) {
         proj.remove(s);
         plist.delItem(plist.getSelectedIndex());
-      };
-    };
+      }
+    }
   }
 
   void rename_actionPerformed(ActionEvent e) {
     String s = plist.getSelectedItem();
-    if(s!=null) {
+    if (s != null) {
       s = proj.rename(s);
-      plist.replaceItem(s,plist.getSelectedIndex());
-    };
+      plist.replaceItem(s, plist.getSelectedIndex());
+    }
   }
 
-  void clear() { plist.removeAll();  proj = new Project(this); }
-  void new_actionPerformed(ActionEvent e) { clear(); proj.newp(); }
-  void open_actionPerformed(ActionEvent e) { clear(); proj.load(plist); }
-  void fileExit_actionPerformed(ActionEvent e) { quit(); }
-  void helpAbout_actionPerformed(ActionEvent e) { new StringRequest(this,"AardEd (april 2000) by Wouter van Oortmerssen",null,false); }
-  void saveall_actionPerformed(ActionEvent e) { proj.saveall(); }
-  void addfile_actionPerformed(ActionEvent e) { proj.loadadd(plist); }
-  void addbag_actionPerformed(ActionEvent e) { proj.newbag(plist); }
-  void addmodule_actionPerformed(ActionEvent e) { proj.newmodule(plist); }
-  void this_windowClosing(WindowEvent e) { quit(); }
+  void clear() {
+    plist.removeAll();
+    proj = new Project(this);
+  }
+
+  void new_actionPerformed(ActionEvent e) {
+    clear();
+    proj.newp();
+  }
+
+  void open_actionPerformed(ActionEvent e) {
+    clear();
+    proj.load(plist);
+  }
+
+  void fileExit_actionPerformed(ActionEvent e) {
+    quit();
+  }
+
+  void helpAbout_actionPerformed(ActionEvent e) {
+    new StringRequest(this, "AardEd (april 2000) by Wouter van Oortmerssen", null, false);
+  }
+
+  void saveall_actionPerformed(ActionEvent e) {
+    proj.saveall();
+  }
+
+  void addfile_actionPerformed(ActionEvent e) {
+    proj.loadadd(plist);
+  }
+
+  void addbag_actionPerformed(ActionEvent e) {
+    proj.newbag(plist);
+  }
+
+  void addmodule_actionPerformed(ActionEvent e) {
+    proj.newmodule(plist);
+  }
+
+  void this_windowClosing(WindowEvent e) {
+    quit();
+  }
+
   void menuItem9_actionPerformed(ActionEvent e) {} //class
+
   void menuItem10_actionPerformed(ActionEvent e) {} //jar
-
-
 }
 
-class MainWin_menuFileExit_ActionAdapter implements ActionListener{
+class MainWin_menuFileExit_ActionAdapter implements ActionListener {
   MainWin adaptee;
 
   MainWin_menuFileExit_ActionAdapter(MainWin adaptee) {
@@ -247,7 +293,7 @@ class MainWin_menuFileExit_ActionAdapter implements ActionListener{
   }
 }
 
-class MainWin_menuHelpAbout_ActionAdapter implements ActionListener{
+class MainWin_menuHelpAbout_ActionAdapter implements ActionListener {
   MainWin adaptee;
 
   MainWin_menuHelpAbout_ActionAdapter(MainWin adaptee) {
@@ -259,8 +305,7 @@ class MainWin_menuHelpAbout_ActionAdapter implements ActionListener{
   }
 }
 
-
-class MainWin_plist_actionAdapter implements java.awt.event.ActionListener{
+class MainWin_plist_actionAdapter implements java.awt.event.ActionListener {
   MainWin adaptee;
 
   MainWin_plist_actionAdapter(MainWin adaptee) {
@@ -272,7 +317,7 @@ class MainWin_plist_actionAdapter implements java.awt.event.ActionListener{
   }
 }
 
-class MainWin_menuItem1_actionAdapter implements java.awt.event.ActionListener{
+class MainWin_menuItem1_actionAdapter implements java.awt.event.ActionListener {
   MainWin adaptee;
 
   MainWin_menuItem1_actionAdapter(MainWin adaptee) {
@@ -284,7 +329,7 @@ class MainWin_menuItem1_actionAdapter implements java.awt.event.ActionListener{
   }
 }
 
-class MainWin_menuItem2_actionAdapter implements java.awt.event.ActionListener{
+class MainWin_menuItem2_actionAdapter implements java.awt.event.ActionListener {
   MainWin adaptee;
 
   MainWin_menuItem2_actionAdapter(MainWin adaptee) {
@@ -296,7 +341,7 @@ class MainWin_menuItem2_actionAdapter implements java.awt.event.ActionListener{
   }
 }
 
-class MainWin_menuItem3_actionAdapter implements java.awt.event.ActionListener{
+class MainWin_menuItem3_actionAdapter implements java.awt.event.ActionListener {
   MainWin adaptee;
 
   MainWin_menuItem3_actionAdapter(MainWin adaptee) {
@@ -308,7 +353,7 @@ class MainWin_menuItem3_actionAdapter implements java.awt.event.ActionListener{
   }
 }
 
-class MainWin_menuItem4_actionAdapter implements java.awt.event.ActionListener{
+class MainWin_menuItem4_actionAdapter implements java.awt.event.ActionListener {
   MainWin adaptee;
 
   MainWin_menuItem4_actionAdapter(MainWin adaptee) {
@@ -332,7 +377,7 @@ class MainWin_this_windowAdapter extends java.awt.event.WindowAdapter {
   }
 }
 
-class MainWin_menuItem5_actionAdapter implements java.awt.event.ActionListener{
+class MainWin_menuItem5_actionAdapter implements java.awt.event.ActionListener {
   MainWin adaptee;
 
   MainWin_menuItem5_actionAdapter(MainWin adaptee) {
@@ -347,7 +392,6 @@ class MainWin_menuItem5_actionAdapter implements java.awt.event.ActionListener{
 class MainWin_addbag_actionAdapter implements java.awt.event.ActionListener {
   MainWin adaptee;
 
-  
   MainWin_addbag_actionAdapter(MainWin adaptee) {
     this.adaptee = adaptee;
   }
@@ -360,7 +404,6 @@ class MainWin_addbag_actionAdapter implements java.awt.event.ActionListener {
 class MainWin_addmodule_actionAdapter implements java.awt.event.ActionListener {
   MainWin adaptee;
 
-  
   MainWin_addmodule_actionAdapter(MainWin adaptee) {
     this.adaptee = adaptee;
   }
@@ -373,7 +416,6 @@ class MainWin_addmodule_actionAdapter implements java.awt.event.ActionListener {
 class MainWin_addfile_actionAdapter implements java.awt.event.ActionListener {
   MainWin adaptee;
 
-  
   MainWin_addfile_actionAdapter(MainWin adaptee) {
     this.adaptee = adaptee;
   }
@@ -386,7 +428,6 @@ class MainWin_addfile_actionAdapter implements java.awt.event.ActionListener {
 class MainWin_menuItem9_actionAdapter implements java.awt.event.ActionListener {
   MainWin adaptee;
 
-  
   MainWin_menuItem9_actionAdapter(MainWin adaptee) {
     this.adaptee = adaptee;
   }
@@ -399,7 +440,6 @@ class MainWin_menuItem9_actionAdapter implements java.awt.event.ActionListener {
 class MainWin_menuItem10_actionAdapter implements java.awt.event.ActionListener {
   MainWin adaptee;
 
-  
   MainWin_menuItem10_actionAdapter(MainWin adaptee) {
     this.adaptee = adaptee;
   }
@@ -408,7 +448,3 @@ class MainWin_menuItem10_actionAdapter implements java.awt.event.ActionListener 
     adaptee.menuItem10_actionPerformed(e);
   }
 }
-
-
-
-

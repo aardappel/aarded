@@ -1,4 +1,8 @@
-public class AardEd { static public void main(String[] args) { new MainWin(); } }
+public class AardEd {
+  public static void main(String[] args) {
+    new MainWin();
+  }
+}
 
 /*
 todo's:
@@ -127,4 +131,3 @@ COMPILER:
 - double occurrences of vars in patterns
 
 */
-
